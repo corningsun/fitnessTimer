@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>健身计时器</title>
+
+<!-- 新 Bootstrap 核心 CSS 文件 -->
+<link rel="stylesheet"
+	href="http://cdn.bootcss.com/bootstrap/3.3.4/css/bootstrap.min.css">
+
+<!-- 可选的Bootstrap主题文件（一般不用引入） -->
+<link rel="stylesheet"
+	href="http://cdn.bootcss.com/bootstrap/3.3.4/css/bootstrap-theme.min.css">
+
+<!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
+<script src="http://cdn.bootcss.com/jquery/1.11.2/jquery.min.js"></script>
+
+<!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+<script src="http://cdn.bootcss.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+
+<script type="text/javascript">
+	
+	var timesCount = 0;
+	
+	function start() {
+		var timesInput = $("#timesInput").val;
+		var exerciseInput = $("#exerciseInput");
+		var restInput = $("#restInput");
+		
+		var endDate = new Date() + timesInput * (exerciseInput + restInput) * 60 * 1000;
+		
+	}
+	
+	function setMsg() {
+		
+		$("#times").text(timesCount);
+		$("#work").text(work);
+	}
+	
+</script>
+
+</head>
+<body>
+
+	<div class="container">
+		<h1>
+			健身计时器 <small>要么瘦，要么死!</small>
+		</h1>
+		<hr>
+	</div>
+
+	<div class="container">
+		<div class="panel panel-default">
+		  <div class="panel-heading" style="font-size: 20px;">
+		 	次数 <B><span id="times"></span></B> <span id="work"></span>中...
+		 </div>
+		  <div class="panel-body">
+		  	<span id="timeRemaining" style="font-size: 250px;">00:00:00</span>
+		  </div>
+		</div>
+	</div>
+
+	<div class="container">
+		<div class="well">
+			<div class="row">
+				<div class="col-md-1"></div>
+					<div class="col-md-3">
+					<label for="timesInput">锻炼次数</label>
+					<input id="timesInput" value="3" type="text" placeholder="请输入锻炼次数" aria-describedby="basic-addon2">
+					<span id="basic-addon2">次</span>
+				</div>
+				
+				<div class="col-md-3">
+					<label for="exerciseInput">锻炼时间</label>
+					<input id="exerciseInput" value="10" type="text" placeholder="请输入锻炼时间" aria-describedby="basic-addon2">
+					<span id="basic-addon2">分钟</span>
+				</div>
+				
+				<div class="col-md-3">
+					<label for="restInput">休息时间</label>
+					<input id="restInput" value="5" type="text" placeholder="请输入休息时间" aria-describedby="basic-addon2">
+					<span id="basic-addon2">分钟</span>
+				</div>
+				
+				<div class="col-md-1">
+					<button onclick="setMsg();" class="btn btn-default">开始</button>
+				</div>
+				<div class="col-md-1"></div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
