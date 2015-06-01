@@ -20,21 +20,101 @@
 
 <script type="text/javascript">
 	
+	// 剩余次数
 	var timesCount = 0;
-	
+	var timesCurrent = 0;
+	// 锻炼时间
+	var exerciseMin = 10;
+	// 休息时间
+	var restMin = 5;
+	// 倒计时结束时间
+	var endDate;
+	// 计时对象
+	var countInterval;
+	// 开始锻炼
 	function start() {
-		var timesInput = $("#timesInput").val;
-		var exerciseInput = $("#exerciseInput");
-		var restInput = $("#restInput");
+		// 隐藏表单
+		hideForm();
 		
-		var endDate = new Date() + timesInput * (exerciseInput + restInput) * 60 * 1000;
+		// 初始化值
+		timesCount = $("#timesInput").val();
+		exerciseMin = $("#exerciseInput").val();
+		restMin = $("#restInput").val();
+		
+		endDate = getEndDate(exerciseMin);
+		// 设置总次数
+		$("#timesCount").text(timesCount);
+		// 设置当前次数
+		$("#times").text(++timesCurrent);
+		// 计时开始
+		countDown();
+		// 设置计时任务，每秒执行一次
+		countInterval = setInterval("countDown()", 1000);
+	}
+	
+	function hideForm() {
+		$("#form").hide();
+	}
+	
+	function showForm() {
+		$("#form").show();
+	}
+
+	function getEndDate(min) {
+		var timeNow = new Date().getTime();
+		var endTime = timeNow + min * 60 * 1000;
+		return new Date().setTime(endTime);
+	}
+	// 是否在锻炼中
+	var isExercising = true;
+	
+	function countDown() {
+		// 计算剩余的毫秒数
+		var timeRemainingLong = endDate - new Date();
+		
+		if (timeRemainingLong <= 0) {
+			// 切换work
+			if (isExercising) {
+				isExercising = false;
+				$("#work").text("休息");
+				endDate = getEndDate(restMin);
+			} else {
+				if (++timesCurrent > timesCount) {
+					// 结束任务
+					clearInterval(countInterval);
+					// 显示表单
+					showForm();
+					// 初始化次数
+					timesCurrent = 0；
+				}
+				$("#times").text(timesCurrent);
+				isExercising = true;
+				$("#work").text("锻炼");
+				endDate = getEndDate(exerciseMin);
+			}
+		}
+		// 更新剩余时间
+		showTimeRemaining(timeRemainingLong);
 		
 	}
 	
-	function setMsg() {
+	function showTimeRemaining(timeRemainingLong) {
+		var hh = parseInt(timeRemainingLong / 1000 / 60 / 60 % 24, 10);//计算剩余的小时数
+		var mm = parseInt(timeRemainingLong / 1000 / 60 % 60, 10);//计算剩余的分钟数
+		var ss = parseInt(timeRemainingLong / 1000 % 60, 10);//计算剩余的秒数
 		
-		$("#times").text(timesCount);
-		$("#work").text(work);
+		hh = checkTime(hh);
+		mm = checkTime(mm);
+		ss = checkTime(ss);
+		
+		$("#timeRemaining").text(hh+":"+mm+":"+ss);
+	}
+	
+	function checkTime(i) {
+		if (i < 10) {
+			i = "0" + i;
+		}
+		return i;
 	}
 	
 </script>
@@ -44,7 +124,7 @@
 
 	<div class="container">
 		<h1>
-			健身计时器 <small>要么瘦，要么死!</small>
+			健身计时器 <small>→_→!</small>
 		</h1>
 		<hr>
 	</div>
@@ -52,7 +132,7 @@
 	<div class="container">
 		<div class="panel panel-default">
 		  <div class="panel-heading" style="font-size: 20px;">
-		 	次数 <B><span id="times"></span></B> <span id="work"></span>中...
+		 	锻炼总次数<B><span id="timesCount">3</span></B>，当前第 <B><span id="times">1</span></B>次， <span id="work">锻炼</span>中...
 		 </div>
 		  <div class="panel-body">
 		  	<span id="timeRemaining" style="font-size: 250px;">00:00:00</span>
@@ -60,7 +140,7 @@
 		</div>
 	</div>
 
-	<div class="container">
+	<div id="form" class="container">
 		<div class="well">
 			<div class="row">
 				<div class="col-md-1"></div>
@@ -83,7 +163,7 @@
 				</div>
 				
 				<div class="col-md-1">
-					<button onclick="setMsg();" class="btn btn-default">开始</button>
+					<button onclick="start();" class="btn btn-default">开始</button>
 				</div>
 				<div class="col-md-1"></div>
 			</div>
